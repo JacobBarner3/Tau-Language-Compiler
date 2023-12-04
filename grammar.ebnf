@@ -1,0 +1,30 @@
+program: { function_dec } .
+function_dec: "func" ID "(" [params] ")" ":" type nest.
+params: paramater {"," paramater} .
+paramater: ID ":" type .
+
+declaration: "var" ID ":" type .
+statement: call | print | if | while | equation .
+func_call: ID "(" [expression_or {"," expression_or}] ")" .
+passed: "(" [expression_or {"," expression_or}] ")" .
+nest: "{" {declaration} {statement | nest} [return] "}" .
+if: "if" expression_or nest [else] .
+else: "else" nest .
+while: "while" expression_or nest .
+
+call: "call" func_call . 
+print: "print" expression_or .
+return: "return" [expression_or] .
+
+equation: ID [array] "=" expression_or.
+expression_or: expression_and {"or" expression_and} .
+expression_and: expression_comp {"and" expression_comp} .
+expression_comp: expression_as {("<" | ">" | "<=" | ">=" | "==" | "!=" ) expression_as} .
+expression_as: expression_md {("+" | "-") expression_md} .
+expression_md: expression_biop {("*" | "/") expression_biop} .
+expression_biop: {"-" | "not"} (INT | "true" | "false" | "(" expression_or ")" | term) .
+term: ID [(passed | type_array)] .
+
+array: "[" expression_or "]" .
+type_array: "[" expression_or "]" type.
+type: "int" | "bool" | "void" | type_array .
